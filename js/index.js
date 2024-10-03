@@ -10,11 +10,26 @@ const loadVideosData = () => {
     .then((data) => displayVideosData(data.videos))
     .catch((err) => console.log(err));
 };
+const btnRemoveClass = () => {
+  const categoriesBtn = document.getElementsByClassName("categories-button");
+  for (let category of categoriesBtn) {
+    console.log(category);
+    category.classList.remove("bg-red-500");
+    category.classList.remove("text-white");
+  }
+};
 
 const categorisCardShow = (id) => {
   fetch(`https://openapi.programming-hero.com/api/phero-tube/category/${id}`)
     .then((res) => res.json())
-    .then((data) => displayVideosData(data.category))
+    .then((data) => {
+      displayVideosData(data.category);
+      btnRemoveClass();
+      const isActiveBtn = document.getElementById(`btn-${id}`);
+      isActiveBtn.classList.add("bg-red-500");
+      isActiveBtn.classList.add("text-white");
+      console.log(isActiveBtn);
+    })
     .catch((err) => console.log(err));
 };
 const displayCategoriesData = (categories) => {
@@ -22,9 +37,15 @@ const displayCategoriesData = (categories) => {
   categories.forEach((item) => {
     const categoryItem = document.createElement("div");
     categoryItem.innerHTML = `
-    <button onClick="categorisCardShow(${item.category_id})"  class="btn bg-red-500 text-lg px-4 text-white">${item.category}</button>
+    <button 
+    id="btn-${item.category_id}" 
+    onClick="categorisCardShow(${item.category_id})"  
+    class="btn  text-lg px-4  categories-button" 
+    >
+    ${item.category}
+    </button>
     `;
-
+    // console.log(categoryItem);
     categoriesBtnSection.appendChild(categoryItem);
   });
 };
